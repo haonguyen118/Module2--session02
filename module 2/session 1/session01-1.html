@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    // let radius = +prompt(` moi ban nhap vao gia tri ban kinh muon tinh:`);
+    const PI = Math.PI;
+    // let area = radius * radius * PI;
+    // let premeter = radius * PI * 2;
+    // console.log(PI);
+    // console.log(area);
+    // console.log(premeter);
+    // alert(`Dien tich hinh tron bang :${area}`);
+    // alert(`Chu vi hinh tron bang:${premeter}`);
+
+    // function areaRadius() {
+    //   alert(`Dien tich hinh tron la: ${area}`);
+    // }
+
+    // function premeterRadius() {
+    //   alert(`Chu vi hinh tron la : ${premeter}`);
+    // }
+    // areaRadius();
+    // premeterRadius();
+    class Cicle {
+      constructor(radius) {
+        this.radius = radius;
+      }
+      getArea() {
+        alert(`Dien tich hinh tron la :${this.radius * this.radius * PI}`);
+      }
+      getPremeter() {
+        alert(`Chu vi hinh tron la: ${this.radius * 2 * PI}`);
+      }
+    }
+    const cicle = new Cicle(10);
+    console.log(cicle.getArea());
+    console.log(cicle.getPremeter());
+  </script>
+</html>

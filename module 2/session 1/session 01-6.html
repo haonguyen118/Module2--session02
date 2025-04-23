@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #table {
+        position: relative;
+        background-color: powderblue;
+        width: 280px;
+        height: 280px;
+        left: 100px;
+        top: 0px;
+      }
+
+      td {
+        border: 1px solid black;
+        align-items: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: medium;
+      }
+
+      input {
+        border-radius: 3%;
+        width: 200px;
+        height: 28px;
+        margin-left: 20px;
+      }
+
+      h3 {
+        text-align: center;
+        text-decoration: aqua;
+        margin-top: 0px;
+      }
+
+      #studentList {
+        position: relative;
+        left: 10%;
+        right: 10%;
+        width: 80%;
+        height: 50%;
+        background-color: azure;
+        line-height: normal;
+      }
+
+      button {
+        width: 60px;
+        height: 20px;
+      }
+
+      .edit {
+        background-color: yellow;
+        color: black;
+      }
+
+      .remove {
+        background-color: brown;
+        color: white;
+      }
+
+      #btnAdd {
+        background-color: blue;
+        position: relative;
+        left: 100px;
+        display: block;
+      }
+
+      #btnUpdate {
+        background-color: blue;
+        position: relative;
+        left: 100px;
+        display: none;
+      }
+
+      #studentList {
+        border: 1px solid black;
+        width: 50%;
+        text-align: center;
+      }
+
+      #errorName,
+      #errorAge,
+      #errorEmail {
+        color: red;
+        font-size: xx-small;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+      }
+
+      #search {
+        background-color: antiquewhite;
+        position: relative;
+        left: 40%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table id="table">
+      <td>
+        <h3>Add Student infor</h3>
+        <form id="addStudent">
+          <label for="">
+            Name
+            <br />
+            <input id="studentName" type="text" placeholder="Input Name"
+          /></label>
+          <br />
+          <small id="errorName"></small>
+          <br />
+          <label for="">
+            Age
+            <br />
+            <input id="studentAge" type="text" placeholder="Input Age"
+          /></label>
+          <br />
+          <small id="errorAge"></small>
+          <br />
+          <label for="">
+            Email <br />
+            <input id="studentEmail" type="text" placeholder="Input Email"
+          /></label>
+          <br />
+          <small id="errorEmail"></small>
+        </form>
+        <br />
+        <button id="btnAdd">Thêm</button>
+        <button style="display: none" id="btnUpdate">Sửa</button>
+      </td>
+    </table>
+    <br />
+    <br />
+    <input id="search" type="search" placeholder="search" />
+    <br />
+    <br />
+    <table id="studentList">
+      <!-- <thead>
+        <td>ID</td>
+        <td>Student Name</td>
+        <td>Student Age</td>
+        <td>Student Email</td>
+        <td>Action</td>
+      </thead>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td ><button>edit</button>
+        <button>remove</button></td>
+      </tr> -->
+    </table>
+  </body>
+  <script>
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+
+    let studentName = document.getElementById("studentName");
+    let studentAge = document.getElementById("studentAge");
+    let studentEmail = document.getElementById("studentEmail");
+    let errorName = document.getElementById("errorName");
+    let errorAge = document.getElementById("errorAge");
+    let errorEmail = document.getElementById("errorEmail");
+    let addStudent = document.getElementById("addStudent");
+    let btnAdd = document.getElementById("btnAdd");
+    let btnUpdate = document.getElementById("btnUpdate");
+    let studentList = document.getElementById("studentList");
+    let edit = document.getElementsByClassName("edit");
+
+    let search = document.querySelector("#search");
+    let currentID =
+      students.length === 0 ? 1 : students[students.length - 1].studentId + 1;
+    let studentUpdate = null;
+    let indexUpdate = -1;
+
+    function checkValidate() {
+      let result = true;
+      let nameValue = studentName.value;
+      let ageValue = studentAge.value;
+      let emailValue = studentEmail.value;
+      if (nameValue === "") {
+        errorName.innerHTML = "Không được để trống Name";
+        result = false;
+      } else {
+        errorName.innerHTML = "";
+      }
+      if (ageValue === "") {
+        errorAge.innerHTML = "Không được để trống Age";
+        result = false;
+      } else {
+        errorAge.innerHTML = "";
+      }
+      if (emailValue === "") {
+        errorEmail.innerHTML = "Không được để trống Email";
+        result = false;
+      } else {
+        errorEmail.innerHTML = "";
+      }
+      return result;
+    }
+    btnAdd.addEventListener("click", () => {
+      let checkEmpty = checkValidate();
+      if (checkEmpty) {
+        let nameValue = studentName.value;
+        let ageValue = studentAge.value;
+        let emailValue = studentEmail.value;
+        let emailExisted = false;
+        for (let i = 0; i < students.length; i++) {
+          if (students[i].studentEmail === emailValue) {
+            emailExisted = true;
+            alert("Email đã tồn tại");
+            break;
+          }
+        }
+        if (!emailExisted) {
+          let newStudent = {
+            studentId: currentID++,
+            studentName: nameValue,
+            studentAge: ageValue,
+            studentEmail: emailValue,
+          };
+          students.push(newStudent);
+          alert("Them sinh vien thanh cong");
+
+          console.log(newStudent);
+          localStorage.setItem("students", JSON.stringify(students));
+          renderStudent();
+        }
+        studentAge.value = "";
+        studentEmail.value = "";
+        studentName.value = "";
+      }
+    });
+
+    function renderStudent() {
+      let newStudent = `<thead>
+            <td>ID</td>
+            <td>Student Name</td>
+            <td>Student Age</td>
+            <td>Student Email</td>
+            <td>Action</td>
+          </thead>`;
+      for (let i = 0; i < students.length; i++) {
+        newStudent += `<tr>
+            <td>${students[i].studentId}</td>
+            <td>${students[i].studentName}</td>
+            <td>${students[i].studentAge}</td>
+            <td>${students[i].studentEmail}</td>
+            <td tyle = "width: 200px"><button class="edit" value ="${students[i].studentId}">edit</button>
+            <button class="remove" value ="${students[i].studentId}">remove</button></td>
+          </tr>`;
+      }
+      studentList.innerHTML = newStudent;
+      let edits = document.querySelectorAll(".edit");
+      for (let i = 0; i < edits.length; i++) {
+        // console.log("da nhan su kien");
+
+        edits[i].addEventListener("click", () => {
+          btnUpdate.style.display = "block";
+          btnAdd.style.display = "none";
+          let valueId = edits[i].getAttribute("value");
+          console.log(valueId);
+          let index = -1;
+          for (let i = 0; i < students.length; i++) {
+            if (students[i].studentId == valueId) {
+              index = i;
+              break;
+            }
+          }
+          if (index >= 0) {
+            let student = students[index];
+            studentName.value = student.studentName;
+            studentAge.value = student.studentAge;
+            studentEmail.value = student.studentEmail;
+            indexUpdate = index;
+          }
+        });
+      }
+      // //tao ham xoa student
+      let removes = document.querySelectorAll(".remove");
+      for (let i = 0; i < removes.length; i++) {
+        let valueId = removes[i].getAttribute("value");
+        removes[i].addEventListener("click", () => {
+          console.log("da nhan su kien");
+          let index = -1;
+          for (let i = 0; i < students.length; i++) {
+            if (students[i].studentId == valueId) {
+              index = i;
+              break;
+            }
+          }
+
+          if (index >= 0) {
+            let confirms = confirm("ban co chac chan muon xoa student");
+            let index = -1;
+            if (confirms) {
+              students.splice(index, 1);
+              alert("Da xoa thanh cong!");
+              localStorage.setItem("students", JSON.stringify(students));
+            }
+            renderStudent();
+          }
+        });
+        studentAge.value = "";
+        studentEmail.value = "";
+        studentName.value = "";
+      }
+    }
+
+    renderStudent();
+
+    //ham sua student
+
+    btnUpdate.addEventListener("click", () => {
+      let checkEmpty = checkValidate();
+      if (checkEmpty) {
+        students[indexUpdate].studentName = studentName.value;
+        students[indexUpdate].studentAge = studentAge.value;
+        students[indexUpdate].studentEmail = studentEmail.value;
+        alert("Update thanh cong");
+        localStorage.setItem("students", JSON.stringify(students));
+        renderStudent();
+      }
+      btnUpdate.style.display = "none";
+      btnAdd.style.display = "block";
+      studentAge.value = "";
+      studentEmail.value = "";
+      studentName.value = "";
+    });
+
+    // tao ham search
+    search.addEventListener("change", () => {
+      if (search.value !== "") {
+        let newList = students.filter((student) =>
+          student.studentName.toLowerCase().includes(search.value.toLowerCase())
+        );
+        students = newList;
+        console.log(newList);
+
+        renderStudent();
+      } else {
+        students = JSON.parse(localStorage.getItem("students")) || [];
+        renderStudent();
+      }
+    });
+  </script>
+</html>

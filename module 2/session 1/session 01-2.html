@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    let number = prompt(`Nhap vao mot ky tu bat ky muon kiem tra: `);
+    function Checkparity(number) {
+      const parseIntNumber = parseInt(number);
+      if (Number.isNaN(parseIntNumber)) {
+        alert(` Ky tu ban nhap vao khong phai la 1 so`);
+      } else if (parseIntNumber % 2 === 0) {
+        alert(`So ban nhap vao la so chan`);
+      } else {
+        alert(`So ban nhap vao la so le`);
+      }
+    }
+
+    Checkparity(number);
+  </script>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let name = prompt(`Moi nhap ten: `);
+      let companyName = prompt(`Moi nhap ten cong ty`);
+      function sendEmail() {
+        console.log(`
+        Dear ${name}
+        Thank you for purchasing oeu product. We hope you enjoy it.
+        Best regards,
+        ${companyName} `);
+      }
+      sendEmail();
+    </script>
+  </body>
+</html>
